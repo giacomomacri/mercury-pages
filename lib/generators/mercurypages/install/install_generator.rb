@@ -5,18 +5,7 @@ module Mercurypages
     def generate_models
       generate 'model', 'page_element name:string list_name:string item_id:integer item_type:string title:string description:string content:text aasm_state:string priority:integer valid_from:datetime valid_until:datetime partial:string'
       inject_into_file 'app/models/page_element.rb', :before => "end" do <<-RUBY
-
   include MercuryPages::ActsAsEditor
-
-  if defined? RailsAdmin
-    rails_admin do
-      list do
-        field :name
-        field :aasm_state
-        field :title
-      end
-    end
-  end
 RUBY
       end
     end
