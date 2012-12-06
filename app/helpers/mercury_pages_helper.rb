@@ -16,7 +16,7 @@ module MercuryPagesHelper
       if options[:'data-mercury'] == 'image'
         image_tag(tag_content, options)
       else
-        content_tag(:span, tag_content, options)
+        content_tag(:div, tag_content, options)
       end
     end
   end
@@ -34,7 +34,7 @@ module MercuryPagesHelper
           content += render(:partial => default_partial, :object => pe.item || pe)
         end
       end
-      content_tag(:span, raw(content), :class => 'editable_list')
+      content_tag(:div, raw(content), :id => "#{name}_editable_list", :class => 'editable_list')
     end
   end
 
