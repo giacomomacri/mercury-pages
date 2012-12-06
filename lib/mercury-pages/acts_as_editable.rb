@@ -15,7 +15,7 @@ module MercuryPages
 
         after_create do |i|
           if i.list_name.present?
-            PageElement.create(:name => "#{i.list_name}-#{self.class.name.underscore}-#{i.id}", :list_name => i.list_name, :item => self)
+            PageElement.create(:name => "#{i.list_name}-#{self.class.name.underscore}-#{i.id}", :list_name => i.list_name, :item_id => self.id, :item_type => self.class.name)
           end
         end
 
