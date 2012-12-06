@@ -13,8 +13,9 @@ module MercuryPages
       belongs_to :item, :polymorphic => true
       attr_accessible :item, :id, :created_at, :updated_at
 
-      scope :by_type, lambda { |t| where(:item_type => t) }
-      scope :by_list, lambda { |l| where(:list_name => l) }
+      scope :by_item_type, lambda { |t| where(:item_type => t) }
+      scope :by_element_type, lambda { |t| where(:element_type => t) }
+      scope :by_list_name, lambda { |l| where(:list_name => l) }
       scope :valid, lambda { where('(page_elements.valid_from IS NULL OR page_elements.valid_from <= :now) AND (page_elements.valid_until IS NULL OR page_elements.valid_until >= :now)', :now => DateTime.now) }
       scope :published, online.valid
 

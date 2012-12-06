@@ -3,20 +3,28 @@ module MercuryPages
     extend ActiveSupport::Concern
  
     module ClassMethods
-      def has_one_asset(*args)
+      def has_one_asset(*args, &block)
         options = args.extract_options!
-        name = args[0] || :asset
-        has_one name, :as => :assettable, :class_name => name.to_s.camelize, :dependent => :destroy, :inverse_of => :assettable
-        accepts_nested_attributes_for name, :allow_destroy => true
+        name = (args[0] || 'asset').to_s
+        has_one name.to_sym, :as => :assettable, :class_name => name.camelize, :dependent => :destroy, :inverse_of => :assettable
+        accepts_nested_attributes_for name.to_sym, :allow_destroy => true
         attr_accessible "#{name}_attributes".to_sym
+
+        define_method "allowed_#{name}_versions".to_sym do
+          block ? block.call : options[:versions]
+        end
       end
 
-      def has_many_assets(*args)
+      def has_many_assets(*args, &block)
         options = args.extract_options!
-        name = args[0] || :assets
-        has_many name, :as => :assettable, :order => 'assets.priority, assets.id', :class_name => name.to_s.singularize.camelize, :dependent => :destroy, :inverse_of => :assettable
-        accepts_nested_attributes_for name, :allow_destroy => true
+        name = (args[0] || 'assets').to_s
+        has_many name.to_sym, :as => :assettable, :order => 'assets.priority, assets.id', :class_name => name.singularize.camelize, :dependent => :destroy, :inverse_of => :assettable
+        accepts_nested_attributes_for name.to_sym, :allow_destroy => true
         attr_accessible "#{name}_attributes".to_sym
+
+        define_method "allowed_#{name.singularize}_versions".to_sym do
+          block ? block.call : options[:versions]
+        end
       end
     end
   end
