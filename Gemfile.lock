@@ -7,14 +7,17 @@ GIT
 PATH
   remote: .
   specs:
-    mercury-pages (0.0.1)
+    mercury-pages (0.0.4)
+      aasm
+      carrierwave
       has_foreign_language
-      mercury-rails (~> 0.9.0)
+      mercury-rails (>= 0.9.0)
       rails (>= 3)
 
 GEM
   remote: http://rubygems.org/
   specs:
+    aasm (3.0.14)
     actionmailer (3.2.9)
       actionpack (= 3.2.9)
       mail (~> 2.4.4)
@@ -44,6 +47,9 @@ GEM
       multi_json (~> 1.0)
     arel (3.0.2)
     builder (3.0.4)
+    carrierwave (0.7.1)
+      activemodel (>= 3.2.0)
+      activesupport (>= 3.2.0)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)

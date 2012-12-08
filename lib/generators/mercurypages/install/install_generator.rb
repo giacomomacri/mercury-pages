@@ -3,10 +3,18 @@ module Mercurypages
     source_root File.expand_path('../templates', __FILE__)
 
     def generate_models
-      generate 'model', 'page_element name:string list_name:string element_type:string item_id:integer item_type:string title:string description:string content:text aasm_state:string priority:integer valid_from:datetime valid_until:datetime partial:string'
-      inject_into_file 'app/models/page_element.rb', :before => "end" do <<-RUBY
+      generate 'model', 'PageElement type:string name:string list_name:string element_type:string item_id:integer item_type:string title:string description:string content:text data:text element_date:datetime aasm_state:string priority:integer valid_from:datetime valid_until:datetime partial:string'
+      inject_into_file 'app/models/page_element.rb', :after => "class PageElement < ActiveRecord::Base" do <<-RUBY
   include MercuryPages::ActsAsEditor
 RUBY
+      end
+      generate 'migration', 'SetupGlobalizeForPageElement'
+      file = Dir['db/migrate/*_setup_globalize_for_page_element.rb'].first
+      inject_into_file file, :after => "def up" do <<-RUBY
+  PageElement.create_translation_table! :title => :string, :description => :string, :content => :text
+      inject_into_file file, :after => "def down" do <<-RUBY
+  PageElement.drop_translation_table!
+ RUBY
       end
     end
 

@@ -22,14 +22,34 @@ module MercuryPages
         has_attached_file :content, options
 
         attr_accessor :delete_content
-        attr_accessible :content, :delete_content, :content_file_name, :content_content_type, :content_file_size, :content_updated_at
+        attr_accessible :content, :delete_content, :content_file_name, :content_content_type, :content_file_size, :link, :target, :content_updated_at
         before_validation { self.content.clear if self.delete_content == '1' }
       end
 
       def acts_as_carrierwave_asset(*args)
         yield :content, :content_file_name
 
-        attr_accessible :content, :content_cache, :remove_content, :content_file_name, :content_content_type, :content_file_size, :content_updated_at
+        attr_accessible :content, :content_cache, :remove_content, :content_file_name, :content_content_type, :content_file_size, :link, :target, :content_updated_at
+      end
+
+      def download(url)
+        uri = URI(url)
+        response = Net::HTTP.get_response(uri)
+        if response.is_a?(Net::HTTPSuccess)
+          if response['Content-Disposition'] && response['Content-Disposition'].match(/filename="(.+)"/i)
+            filename = $1
+          else
+            filename = url
+          end
+          extname = File.extname(filename)
+          basename = File.basename(filename, extname)
+          Tempfile.open([basename, extname]) do |f|
+            f.binmode
+            f.write(response.body)
+            f.rewind
+            yield f
+          end
+        end
       end
     end
   end

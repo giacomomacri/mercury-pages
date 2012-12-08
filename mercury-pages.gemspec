@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
   s.add_dependency "mercury-rails", ">= 0.9.0"
   s.add_dependency "has_foreign_language"
   s.add_dependency "aasm"
+  s.add_dependency "carrierwave"
 
   s.add_development_dependency "sqlite3"
 end

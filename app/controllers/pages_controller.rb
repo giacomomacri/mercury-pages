@@ -3,7 +3,7 @@ class PagesController < ApplicationController
   helper_method :page_name
 
   def page_name
-    "pages/#{params[:id]}".split('/').join('-')
+    "pages/#{params[:id]}".split('/').join('_')
   end
 
   def show

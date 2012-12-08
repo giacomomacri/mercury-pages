@@ -1,4 +1,5 @@
 en:
   mercury_pages:
-    edit: "Edit this page"
-    manage: "Manage it"
+    edit_in_line: "Edit this page inline"
+    toggle: "Toggle controls"
+    empty_element: "Empty area: %{name}"
