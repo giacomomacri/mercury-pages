@@ -10,16 +10,22 @@ module MercuryPages
     end
  
     module ClassMethods
-      def acts_as_paperclip_asset(options = {})
+      def acts_as_paperclip_asset(*args)
+        options = args.extract_options!
         options[:styles] = lambda do |a|
           m = "allowed_#{self.name.underscore}_versions".to_sym
-          s = nil
+          asset_image_versions = nil
           if a.instance.assettable && a.instance.assettable.respond_to?(m)
-            s = a.instance.assettable.send(m)
+            asset_image_versions = a.instance.assettable.send(m, a)
           end
-          s || {}
+          all_versions = MercuryPages::paperclip_options[:styles] || {}
+          if asset_image_versions
+            all_versions.select { |k, v| asset_image_versions.include? k }
+          else
+            all_versions
+          end
         end
-        has_attached_file :content, options
+        has_attached_file :content, MercuryPages::paperclip_options.merge(options)
 
         attr_accessor :delete_content
         attr_accessible :content, :delete_content, :content_file_name, :content_content_type, :content_file_size, :link, :target, :content_updated_at
@@ -27,7 +33,9 @@ module MercuryPages
       end
 
       def acts_as_carrierwave_asset(*args)
-        yield :content, :content_file_name
+        options = args.extract_options!
+        uploader = args[0] || ImageUploader
+        mount_uploader :content, uploader, :mount_on => :content_file_name
 
         attr_accessible :content, :content_cache, :remove_content, :content_file_name, :content_content_type, :content_file_size, :link, :target, :content_updated_at
       end

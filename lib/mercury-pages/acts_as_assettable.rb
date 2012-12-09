@@ -10,8 +10,8 @@ module MercuryPages
         accepts_nested_attributes_for name.to_sym, :allow_destroy => true
         attr_accessible "#{name}_attributes".to_sym
 
-        define_method "allowed_#{name}_versions".to_sym do
-          block ? block.call : options[:versions]
+        define_method "allowed_#{name}_versions".to_sym do |attachment = nil|
+          block ? block.call(attachment) : options[:versions]
         end
       end
 
@@ -22,8 +22,8 @@ module MercuryPages
         accepts_nested_attributes_for name.to_sym, :allow_destroy => true
         attr_accessible "#{name}_attributes".to_sym
 
-        define_method "allowed_#{name.singularize}_versions".to_sym do
-          block ? block.call : options[:versions]
+        define_method "allowed_#{name.singularize}_versions".to_sym do |attachment = nil|
+          block ? block.call(attachment) : options[:versions]
         end
       end
     end

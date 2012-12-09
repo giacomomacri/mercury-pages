@@ -21,6 +21,8 @@ Gem::Specification.new do |s|
   s.add_dependency "has_foreign_language"
   s.add_dependency "aasm"
   s.add_dependency "carrierwave"
+  s.add_dependency "rmagick"
+  s.add_dependency "mime-types"
 
   s.add_development_dependency "sqlite3"
 end
