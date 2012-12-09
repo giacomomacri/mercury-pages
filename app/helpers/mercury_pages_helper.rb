@@ -25,11 +25,11 @@ module MercuryPagesHelper
       content = ''
       params = options.delete(:find) || {}
       params[:conditions] = (params[:conditions] || {}).merge(:list_name => name)
-      PageElement.find(:all, params).each_with_index do |pe, i|
+      MercuryPages::editor_class.find(:all, params).each_with_index do |pe, i|
         if block_given?
           content += capture(pe, i, &block)
         else
-          default_partial = pe.partial.blank? ? (options[:default] || options[:page_elements] || 'page_element') : pe.partial
+          default_partial = pe.partial.blank? ? (options[:default] || options[:page_elements] || pe.item_type.underscore || 'page_element') : pe.partial
           if p = options[pe.item_type.underscore.pluralize.to_sym]
             content += render(:partial => p == :inherit ? default_partial : p, :object => pe.item) if pe.item
           else
@@ -123,7 +123,7 @@ EOF
     else
       with_editable_object(false, *args) do |name, field, e, options|
         action = options.delete(:action) || 'edit'
-        e ||= PageElement.get_by_name(name, false)
+        e ||= MercuryPages::editor_class.get_by_name(name, false)
         clazz = e ? e.class.name : name.to_s
         if defined? RailsAdmin
           names = clazz.split("::").map { |n| n.underscore }
@@ -158,7 +158,7 @@ EOF
     else
       name = args[0] || (controller_name == 'pages' ? page_name : "#{controller_name}_#{action_name}")
       name = "#{name}_#{options[:part]}" unless options[:part].blank?
-      e = PageElement.get_by_name(name, find_or_create) # Find a Page Element unless bound to an AR model object
+      e = MercuryPages::editor_class.get_by_name(name, find_or_create) # Find a Page Element unless bound to an AR model object
       if e
         options[:'data-activerecord-class'] = e.class.name
         options[:'data-activerecord-id'] = e.id

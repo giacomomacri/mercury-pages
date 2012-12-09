@@ -48,7 +48,7 @@ module MercuryPages
     module ClassMethods
       def get_by_name(name, create = nil)
         create = true if create.nil?
-        block = Proc.new { create ? PageElement.find_or_create_by_name(name) : PageElement.find_by_name(name) }
+        block = Proc.new { create ? find_or_create_by_name(name) : find_by_name(name) }
         MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor##{name}", &block) : block.call        
       end
     end
@@ -63,7 +63,7 @@ module MercuryPages
     end
 
     def aasm_state_enum
-      PageElement.aasm_states_for_select
+      self.class.aasm_states_for_select
     end
 
     def partial_enum
