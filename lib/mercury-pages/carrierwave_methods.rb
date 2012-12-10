@@ -9,7 +9,7 @@ module MercuryPages
           m = "allowed_#{model.class.name.underscore}_versions".to_sym
           if model.assettable && model.assettable.respond_to?(m)
             asset_image_versions = model.assettable.send(m, a)
-            asset_image_versions && asset_image_versions.include?(v)
+            asset_image_versions.nil? || asset_image_versions.include?(v)
           else
             true
           end
