@@ -24,8 +24,17 @@ module MercuryPages
 
       attr_accessible :item, :translations_attributes, :id, :created_at, :updated_at
 
+      after_create do |editor|
+        if name.blank?
+          update_attribute(:name, "activerecord_#{self.class.name.underscore}_#{id}")
+        end
+      end
+
       after_save do |editor|
-        Rails.cache.delete("editor##{editor.name}") if MercuryPages.enable_elements_cache
+        if MercuryPages.enable_elements_cache
+          Rails.cache.delete("editor##{name}") if name.present?
+          Rails.cache.delete("editor@#{slug}") if slug.present?
+        end
       end
 
       if defined? RailsAdmin
@@ -49,9 +58,29 @@ module MercuryPages
       def get_by_name(name, create = nil)
         create = true if create.nil?
         block = Proc.new { create ? find_or_create_by_name(name) : find_by_name(name) }
-        MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor##{name}", &block) : block.call        
+        MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor##{name}", &block) : block.call
+      end
+
+      def get_by_slug(slug)
+        block = Proc.new { find_by_name(name) }
+        MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor@#{slug}", &block) : block.call
       end
     end
+
+    def item_type=(t)
+      source_class = t.to_s.classify.constantize
+      if source_class.respond_to?(:base_class)
+        base_class = source_class.base_class
+        if base_class.attribute_names.include?('type')
+          super(base_class.name)
+        else
+          super
+        end
+      else
+        super
+      end
+    end
+
 
     def published?
       if item && item.respond_to?(:published)

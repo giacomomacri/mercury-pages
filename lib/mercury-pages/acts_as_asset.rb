@@ -60,5 +60,19 @@ module MercuryPages
         end
       end
     end
+
+    def assettable_type=(t)
+      source_class = t.to_s.classify.constantize
+      if source_class.respond_to?(:base_class)
+        base_class = source_class.base_class
+        if base_class.attribute_names.include?('type')
+          super(base_class.name)
+        else
+          super
+        end
+      else
+        super
+      end
+    end
   end
 end

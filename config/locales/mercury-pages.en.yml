@@ -3,3 +3,4 @@ en:
     edit_in_line: "Edit this page inline"
     toggle: "Toggle controls"
     empty_element: "Empty area: %{name}"
+    empty_element_field: "Empty area: %{name}, field %{field}"

@@ -1,8 +1,9 @@
 module MercuryPagesHelper
-  def editable_element(*args, &block)
+  def mercury_element_tag(*args, &block)
     with_editable_object(true, *args) do |name, field, e, options|
-      instance_variable_set("@#{name.underscore}", e)
+      instance_variable_set("@#{name.to_s.underscore}", e)
 
+      tag = options.delete(:tag) || :div
       options[:id] ||= "#{name}#{MercuryPages::EDITABLE_SUFFIX}"
       options[:'data-mercury'] ||= 'full'
       options[:class] = options[:class].to_s + ' mercury-pages-editable-element' if can_edit?
@@ -15,17 +16,17 @@ module MercuryPagesHelper
       if options[:'data-mercury'] == 'image'
         image_tag(tag_content, options)
       else
-        content_tag(:div, tag_content.blank? ? empty_editable_tag(name, field) : tag_content, options)
+        content_tag(tag, tag_content.blank? ? empty_editable_tag(name, field) : tag_content, options)
       end
     end
   end
 
-  def editable_list(*args, &block)
+  def element_list_tag(*args, &block)
     with_editable_object(false, *args) do |name, field, e, options|
       content = ''
       params = options.delete(:find) || {}
       params[:conditions] = (params[:conditions] || {}).merge(:list_name => name)
-      MercuryPages::editor_class.find(:all, params).each_with_index do |pe, i|
+      MercuryPages::editor_class.published.find(:all, params).each_with_index do |pe, i|
         if block_given?
           content += capture(pe, i, &block)
         else
@@ -172,6 +173,10 @@ EOF
   end
 
   def empty_editable_tag(name, field, options = {})
-    content_tag(:span, t('mercury_pages.empty_element', :name => name, :field => field), :class => 'mercury-pages-empty')
+    if field
+      content_tag(:span, t('mercury_pages.empty_element_field', :name => name, :field => field), :class => 'mercury-pages-empty')
+    else
+      content_tag(:span, t('mercury_pages.empty_element', :name => name), :class => 'mercury-pages-empty')
+    end
   end
 end

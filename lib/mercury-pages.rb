@@ -11,6 +11,7 @@ module MercuryPages
 
   mattr_accessor :editor_class
   mattr_accessor :enable_elements_cache
+  mattr_accessor :enable_custom_pages
   mattr_accessor :paperclip_options
   mattr_accessor :carrierwave_versions
 

@@ -6,7 +6,7 @@ module MercuryPages
       def has_one_asset(*args, &block)
         options = args.extract_options!
         name = (args[0] || 'asset').to_s
-        has_one name.to_sym, :as => :assettable, :class_name => name.camelize, :dependent => :destroy, :inverse_of => :assettable
+        has_one name.to_sym, :as => :assettable, :class_name => name.classify, :dependent => :destroy, :inverse_of => :assettable
         accepts_nested_attributes_for name.to_sym, :allow_destroy => true
         attr_accessible "#{name}_attributes".to_sym
 
@@ -18,7 +18,7 @@ module MercuryPages
       def has_many_assets(*args, &block)
         options = args.extract_options!
         name = (args[0] || 'assets').to_s
-        has_many name.to_sym, :as => :assettable, :order => 'assets.priority, assets.id', :class_name => name.singularize.camelize, :dependent => :destroy, :inverse_of => :assettable
+        has_many name.to_sym, :as => :assettable, :order => 'assets.priority, assets.id', :class_name => name.classify, :dependent => :destroy, :inverse_of => :assettable
         accepts_nested_attributes_for name.to_sym, :allow_destroy => true
         attr_accessible "#{name}_attributes".to_sym
 

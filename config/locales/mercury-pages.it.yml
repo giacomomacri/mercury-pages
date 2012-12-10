@@ -3,3 +3,4 @@ it:
     edit_in_line: "Modifica questa pagina in linea"
     toggle: "Accendi/spegni i controlli"
     empty_element: "Area vuota: %{name}"
+    empty_element_field: "Area vuota: %{name}, campo %{field}"

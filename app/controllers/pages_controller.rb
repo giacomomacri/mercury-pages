@@ -1,6 +1,7 @@
 class PagesController < ApplicationController
   layout :pages_layout
-  helper_method :page_name
+  helper_method :page_name, :page_template
+  attr_reader :page_template
 
   def page_name
     "pages/#{params[:id]}".split('/').join('_')
@@ -17,9 +18,19 @@ class PagesController < ApplicationController
   private
 
   def render_page_template(path)
-    t = "pages/#{path}"
+    t = nil
+    options = {}
+    if MercuryPages::enable_elements_cache
+      pe = MercuryPages.editor_class.published.find_by_slug(path)
+      if pe && pe.partial.present?
+        @page_template = pe
+        options[:template] = pe.partial
+        options[:layout] = pe.layout if pe.layout.present?
+      end
+    end
+    options[:template] ||= "pages/#{path}"
     begin
-      render :template => t
+      render options
     rescue ActionView::MissingTemplate => e
       raise Rails.env.development? ? e : ActionController::RoutingError.new(t)
     end    
