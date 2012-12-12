@@ -1,4 +1,16 @@
 module MercuryPagesHelper
+  def element_tag(*args, &block)
+    with_editable_object(true, *args) do |name, field, e, options|
+      instance_variable_set("@#{name.to_s.underscore}", e)
+
+      offline = e.respond_to?(:'published?') ? !e.published? : false
+      return if offline
+
+      content = e.nil? ? nil : block ? capture(e, &block) : e.send(field)
+      content.blank? ? empty_editable_tag(name, field) : raw(content)
+    end
+  end
+
   def mercury_element_tag(*args, &block)
     with_editable_object(true, *args) do |name, field, e, options|
       instance_variable_set("@#{name.to_s.underscore}", e)
@@ -11,12 +23,11 @@ module MercuryPagesHelper
       offline = e.respond_to?(:'published?') ? !e.published? : false
       return if offline
 
-      content = e.nil? ? nil : e.send(field)
-      tag_content = (e.nil? || content.blank?) && block ? capture(&block) : raw(content)
+      content = e.nil? ? nil : block ? capture(e, &block) : e.send(field)
       if options[:'data-mercury'] == 'image'
-        image_tag(tag_content, options)
+        image_tag(content.present? ? content : root_url, options)
       else
-        content_tag(tag, tag_content.blank? ? empty_editable_tag(name, field) : tag_content, options)
+        content_tag(tag, content.blank? ? empty_editable_tag(name, field) : raw(content), options)
       end
     end
   end
@@ -151,6 +162,8 @@ EOF
     e = args[0]
     field = options[:field] || 'content'
     create = options.delete(:create)
+    element_class = options.delete(:element_class)
+    element_class = element_class.to_s.constantize if element_class
     if e.is_a?(ActiveRecord::Base)
       name = "activerecord_#{e.class.name.underscore}_#{e.id}"
       name = "#{name}_#{options[:part]}" unless options[:part].blank?
@@ -159,7 +172,7 @@ EOF
     else
       name = args[0] || (controller_name == 'pages' ? page_name : "#{controller_name}_#{action_name}")
       name = "#{name}_#{options[:part]}" unless options[:part].blank?
-      e = MercuryPages::editor_class.get_by_name(name, find_or_create) # Find a Page Element unless bound to an AR model object
+      e = (element_class || MercuryPages::editor_class).get_by_name(name, find_or_create) # Find a Page Element unless bound to an AR model object
       if e
         options[:'data-activerecord-class'] = e.class.name
         options[:'data-activerecord-id'] = e.id

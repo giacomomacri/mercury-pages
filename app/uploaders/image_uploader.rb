@@ -57,4 +57,5 @@ class ImageUploader < CarrierWave::Uploader::Base
   #   "something.jpg" if original_filename
   # end
 
+  ActiveSupport.run_load_hooks(:mercury_pages_uploaders, self)
 end

@@ -46,6 +46,7 @@ module MercuryPages
             hide
           end
           list do
+            field :type
             field :name
             field :aasm_state
             field :title

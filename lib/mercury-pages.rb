@@ -21,13 +21,13 @@ module MercuryPages
   def self.setup
     yield self
     @@editor_class ||= ::PageElement  
-    @@carrierwave_versions.each do |uploader, version|
-      uploader.send(:include, MercuryPages::CarrierWaveMethods)
+    ActiveSupport.on_load(:mercury_pages_uploaders) do
+      include MercuryPages::CarrierWaveMethods
     end
   end
 
   def self.carrierwave_version(name, options = {}, &block)
-    uploader = options.delete(:uploader) || ImageUploader
+    uploader = (options.delete(:uploader) || ImageUploader).to_s
     @@carrierwave_versions[uploader] ||= {}
     @@carrierwave_versions[uploader][name] = {:options => options, :block => block}
   end

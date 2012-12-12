@@ -7,6 +7,7 @@ module MercuryPages
       attr_accessible :id, :created_at, :updated_at
 
       scope :by_type, lambda { |t| where(:type => t) }
+      delegate :url, :to => :content
     end
  
     module ClassMethods

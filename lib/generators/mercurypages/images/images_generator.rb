@@ -7,7 +7,6 @@ module Mercurypages
       generate 'paperclip', 'Asset content'
       inject_into_file 'app/models/asset.rb', :before => "end" do <<-RUBY
   include MercuryPages::ActsAsAsset
-  delegate :url, :to => :content
 RUBY
       end
     end
