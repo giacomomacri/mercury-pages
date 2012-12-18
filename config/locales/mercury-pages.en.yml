@@ -4,3 +4,62 @@ en:
     toggle: "Toggle controls"
     empty_element: "Empty area: %{name}"
     empty_element_field: "Empty area: %{name}, field %{field}"
+
+  activerecord:
+    models:
+      asset:
+        one: File
+        other: Files
+      image:
+        one: Image
+        other: Images
+      attachment:
+        one: Attachment
+        other: Attachments
+      page_element:
+        one: Editable element
+        other: Editable elements
+      role:
+        one: Rols
+        other: Riles
+      user:
+        one: User
+        other: Users
+    attributes:
+      asset:
+        type: Type
+        assettable: Linked to
+        title: Title
+        description: Description
+        content: Content
+        priority: Visual. priority
+        content_file_name: Content
+        content_content_type: MIME Type
+        content_file_size: File size
+        content_updated_at: Last update
+        link: Link (URL)
+        target: Link target
+      page_element:
+        type: Type
+        name: Name
+        list_name: Page area
+        title: Title
+        description: Description
+        content: Content
+        data: Data
+        aasm_state: Status
+        priority: Visual. priority
+        element_date: Reference date
+        valid_from: Valid from
+        valid_until: Valid ultil
+        partial: Visual. snippet
+        layout: Visual. layout
+        images: Images
+        attachments: Attachments
+      role:
+        name: Name
+        users: Users
+      user:
+        name: Name
+        sign_in_count: Sign in count
+        roles: Roles

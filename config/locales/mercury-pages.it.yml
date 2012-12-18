@@ -4,3 +4,62 @@ it:
     toggle: "Accendi/spegni i controlli"
     empty_element: "Area vuota: %{name}"
     empty_element_field: "Area vuota: %{name}, campo %{field}"
+
+  activerecord:
+    models:
+      asset:
+        one: File
+        other: File
+      image:
+        one: Immagine
+        other: Immagini
+      attachment:
+        one: Allegato
+        other: Allegati
+      page_element:
+        one: Elemento modificabile
+        other: Elementi modificabili
+      role:
+        one: Ruolo
+        other: Ruoli
+      user:
+        one: Utente
+        other: Utenti
+    attributes:
+      asset:
+        type: Tipo
+        assettable: Legato a
+        title: Titolo
+        description: Descrizione
+        content: Contenuto
+        priority: Priorità di visual.
+        content_file_name: Contenuto
+        content_content_type: Tipo MIME
+        content_file_size: Dimens. del file
+        content_updated_at: Data ultimo agg.
+        link: Link (URL)
+        target: Target del link
+      page_element:
+        type: Tipo
+        name: Nome
+        list_name: Area in pagina
+        title: Titolo
+        description: Descrizione
+        content: Contenuto
+        data: Dati
+        aasm_state: Stato
+        priority: Priorità di visual.
+        element_date: Data di riferimento
+        valid_from: Valido da
+        valid_until: Valido fino a
+        partial: Snippet di visual.
+        layout: Layout di visual.
+        images: Immagini
+        attachments: Allegati
+      role:
+        name: Nome
+        users: Utenti
+      user:
+        name: Nome/Rag. soc.
+        sign_in_count: Numero di accessi
+        roles: Ruoli

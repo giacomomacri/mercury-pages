@@ -20,8 +20,8 @@ class PagesController < ApplicationController
   def render_page_template(path)
     t = nil
     options = {}
-    if MercuryPages::enable_elements_cache
-      pe = MercuryPages.editor_class.published.find_by_slug(path)
+    if MercuryPages::enable_custom_pages
+      pe = MercuryPages.editor_class.published.where(:slug => path).first
       if pe && pe.partial.present?
         @page_template = pe
         options[:template] = pe.partial

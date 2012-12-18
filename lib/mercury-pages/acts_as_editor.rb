@@ -20,9 +20,8 @@ module MercuryPages
       default_scope order('priority')
       
       translates :title, :description, :content
-      accepts_nested_attributes_for :translations, :allow_destroy => true
 
-      attr_accessible :item, :translations_attributes, :id, :created_at, :updated_at
+      attr_accessible :item, :id, :created_at, :updated_at
 
       after_create do |editor|
         if name.blank?
@@ -51,7 +50,7 @@ module MercuryPages
             field :aasm_state
             field :title
           end
-        end
+        end rescue nil
       end
     end
  
@@ -81,7 +80,6 @@ module MercuryPages
         super
       end
     end
-
 
     def published?
       if item && item.respond_to?(:published)

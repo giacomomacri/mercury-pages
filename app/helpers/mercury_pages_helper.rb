@@ -1,4 +1,8 @@
 module MercuryPagesHelper
+  def image_holder_tag(size)
+    content_tag(:img, nil, :'data-src' => "holder.js/#{size}")    
+  end
+
   def element_tag(*args, &block)
     with_editable_object(true, *args) do |name, field, e, options|
       instance_variable_set("@#{name.to_s.underscore}", e)
@@ -16,7 +20,11 @@ module MercuryPagesHelper
       instance_variable_set("@#{name.to_s.underscore}", e)
 
       tag = options.delete(:tag) || :div
-      options[:id] ||= "#{name}#{MercuryPages::EDITABLE_SUFFIX}"
+      id = "#{name}"
+      if field.present? && field != 'content'
+        id = "#{id}_#{field}"
+      end
+      options[:id] ||= "#{id}#{MercuryPages::EDITABLE_SUFFIX}"
       options[:'data-mercury'] ||= 'full'
       options[:class] = options[:class].to_s + ' mercury-pages-editable-element' if can_edit?
 
@@ -180,7 +188,6 @@ EOF
     end
     if field.present? && field != 'content'
       options[:'data-activerecord-field'] = field
-      name = "#{name}_#{field}"
     end
     yield name, field, e, options
   end
