@@ -19,14 +19,14 @@ module MercuryPages
           if a.instance.assettable && a.instance.assettable.respond_to?(m)
             asset_image_versions = a.instance.assettable.send(m, a)
           end
-          all_versions = MercuryPages::paperclip_options[:styles] || {}
+          all_versions = MercuryPages.paperclip_options[:styles] || {}
           if asset_image_versions
             all_versions.select { |k, v| asset_image_versions.include? k }
           else
             all_versions
           end
         end
-        has_attached_file :content, MercuryPages::paperclip_options.merge(options)
+        has_attached_file :content, MercuryPages.paperclip_options.merge(options)
 
         attr_accessor :delete_content
         attr_accessible :content, :delete_content, :content_file_name, :content_content_type, :content_file_size, :link, :target, :content_updated_at

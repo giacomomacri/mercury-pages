@@ -58,12 +58,12 @@ module MercuryPages
       def get_by_name(name, create = nil)
         create = true if create.nil?
         block = Proc.new { create ? find_or_create_by_name(name) : find_by_name(name) }
-        MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor##{name}", &block) : block.call
+        Rails.application.config.cache_classes && MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor##{name}", &block) : block.call
       end
 
       def get_by_slug(slug)
         block = Proc.new { find_by_name(name) }
-        MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor@#{slug}", &block) : block.call
+        Rails.application.config.cache_classes && MercuryPages.enable_elements_cache ? Rails.cache.fetch("editor@#{slug}", &block) : block.call
       end
     end
 

@@ -9,7 +9,7 @@ module MercuryPages
       def acts_as_editable(options = {})
         attr_accessor :list_name
 
-        has_many :page_elements, :as => :item, :class_name => MercuryPages::editor_class, :order => 'priority, id', :dependent => :destroy, :inverse_of => :item
+        has_many :page_elements, :as => :item, :class_name => MercuryPages.editor_class, :order => 'priority, id', :dependent => :destroy, :inverse_of => :item
 
         accepts_nested_attributes_for :page_elements, :allow_destroy => true
         attr_accessible :id, :created_at, :updated_at, :list_name, :page_elements_attributes

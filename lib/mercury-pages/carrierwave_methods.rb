@@ -3,7 +3,7 @@ module MercuryPages
     extend ActiveSupport::Concern
 
     included do
-      MercuryPages::carrierwave_versions[self.to_s].each do |v, config|
+      MercuryPages.carrierwave_versions[self.to_s].each do |v, config|
         version v, {:if => "#{v}_is_enabled?".to_sym}.merge(config[:options]), &config[:block]
         define_method "#{v}_is_enabled?".to_sym do |a|
           m = "allowed_#{model.class.name.underscore}_versions".to_sym

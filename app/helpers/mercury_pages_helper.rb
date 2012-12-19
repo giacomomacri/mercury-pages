@@ -1,6 +1,9 @@
 module MercuryPagesHelper
-  def image_holder_tag(size)
-    content_tag(:img, nil, :'data-src' => "holder.js/#{size}")    
+  def seo_tags(*args, &block)
+    with_editable_object(true, *args) do |name, field, e, options|
+      content_for(:page_title) { options[:title] || e.title } if options[:title] || e.respond_to?(:title)
+      content_for(:page_description) { options[:description] || e.description } if options[:description] || e.respond_to?(:description)
+    end    
   end
 
   def element_tag(*args, &block)
@@ -45,7 +48,7 @@ module MercuryPagesHelper
       content = ''
       params = options.delete(:find) || {}
       params[:conditions] = (params[:conditions] || {}).merge(:list_name => name)
-      MercuryPages::editor_class.published.find(:all, params).each_with_index do |pe, i|
+      MercuryPages.editor_class.published.find(:all, params).each_with_index do |pe, i|
         if block_given?
           content += capture(pe, i, &block)
         else
@@ -143,7 +146,7 @@ EOF
     else
       with_editable_object(false, *args) do |name, field, e, options|
         action = options.delete(:action) || 'edit'
-        e ||= MercuryPages::editor_class.get_by_name(name, false)
+        e ||= MercuryPages.editor_class.get_by_name(name, false)
         clazz = e ? e.class.name : name.to_s
         if defined? RailsAdmin
           names = clazz.split("::").map { |n| n.underscore }
@@ -180,7 +183,7 @@ EOF
     else
       name = args[0] || (controller_name == 'pages' ? page_name : "#{controller_name}_#{action_name}")
       name = "#{name}_#{options[:part]}" unless options[:part].blank?
-      e = (element_class || MercuryPages::editor_class).get_by_name(name, find_or_create) # Find a Page Element unless bound to an AR model object
+      e = (element_class || MercuryPages.editor_class).get_by_name(name, find_or_create) # Find a Page Element unless bound to an AR model object
       if e
         options[:'data-activerecord-class'] = e.class.name
         options[:'data-activerecord-id'] = e.id
