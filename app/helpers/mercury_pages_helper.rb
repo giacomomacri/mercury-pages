@@ -52,8 +52,8 @@ module MercuryPagesHelper
         if block_given?
           content += capture(pe, i, &block)
         else
-          default_partial = pe.partial.blank? ? (options[:default] || options[:page_elements] || pe.item_type.underscore || 'page_element') : pe.partial
-          if p = options[pe.item_type.underscore.pluralize.to_sym]
+          default_partial = pe.partial.blank? ? (options[:default] || options[:page_elements] || pe.item_type.try(:underscore) || 'page_element') : pe.partial
+          if pe.item_type && p = options[pe.item_type.underscore.pluralize.to_sym]
             content += render(:partial => p == :inherit ? default_partial : p, :object => pe.item) if pe.item
           else
             content += render(:partial => default_partial, :object => pe.item || pe)
