@@ -43,6 +43,7 @@ en:
         type: Type
         name: Name
         list_name: Page area
+        item: Linked to
         title: Title
         description: Description
         content: Content

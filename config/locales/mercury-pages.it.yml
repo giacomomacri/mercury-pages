@@ -43,6 +43,7 @@ it:
         type: Tipo
         name: Nome
         list_name: Area in pagina
+        item: Collegato a
         title: Titolo
         description: Descrizione
         content: Contenuto
